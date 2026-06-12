@@ -1,0 +1,19 @@
+# Core numerical/scientific stack
+numpy>=1.24
+matplotlib>=3.7
+
+# RL environment API
+gymnasium>=0.29
+
+# Deep learning
+torch>=2.0
+
+# Stable-Baselines3 algorithms: SAC and PPO
+stable-baselines3>=2.3
+
+# Visualization demos
+pygame>=2.5
+
+# Optional utilities
+tqdm>=4.66
+pandas>=2.0

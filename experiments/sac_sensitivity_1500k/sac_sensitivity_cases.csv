@@ -1,0 +1,8 @@
+name,group,task,parent_dir,timesteps,seed,learning_rate,ent_coef,r_goal,r_collision,r_step,r_action,r_progress,r_proximity,proximity_threshold,out_dir
+baseline_lr3e4_entauto_reward350_4,baseline,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0003,auto,350.0,-100.0,-0.01,-0.001,4.0,-0.01,1.0,experiments\sac_sensitivity_1500k\baseline_lr3e4_entauto_reward350_4
+lr_low_1e4,learning_rate,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0001,auto,350.0,-100.0,-0.01,-0.001,4.0,-0.01,1.0,experiments\sac_sensitivity_1500k\lr_low_1e4
+lr_high_1e3,learning_rate,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.001,auto,350.0,-100.0,-0.01,-0.001,4.0,-0.01,1.0,experiments\sac_sensitivity_1500k\lr_high_1e3
+reward_weak_guidance,reward,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0003,auto,200.0,-100.0,-0.01,-0.001,1.0,-0.01,1.0,experiments\sac_sensitivity_1500k\reward_weak_guidance
+reward_aggressive_goal,reward,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0003,auto,600.0,-100.0,-0.01,-0.001,10.0,-0.01,1.0,experiments\sac_sensitivity_1500k\reward_aggressive_goal
+reward_weak_safety,reward,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0003,auto,350.0,-50.0,-0.01,-0.001,4.0,0.0,1.0,experiments\sac_sensitivity_1500k\reward_weak_safety
+reward_safety_focused,reward,three_obstacles_random,experiments/sac/two_obstacles_random,1500000,700,0.0003,auto,350.0,-250.0,-0.01,-0.001,4.0,-0.05,1.5,experiments\sac_sensitivity_1500k\reward_safety_focused

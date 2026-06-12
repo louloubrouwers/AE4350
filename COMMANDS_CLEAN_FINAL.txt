@@ -1,0 +1,105 @@
+# =========================
+# SB3 SAC clean curriculum
+# =========================
+
+py train_sac.py --task free_random --total-timesteps 300000 --out-dir experiments/sac/free_random --seed 0 --device auto
+py eval_sac.py --task free_random --model-dir experiments/sac/free_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task one_obstacle_fixed --load-from experiments/sac/free_random --total-timesteps 500000 --out-dir experiments/sac/one_obstacle_fixed --seed 1 --device auto
+py eval_sac.py --task one_obstacle_fixed --model-dir experiments/sac/one_obstacle_fixed --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task one_obstacle_jitter_r2 --load-from experiments/sac/one_obstacle_fixed --total-timesteps 500000 --out-dir experiments/sac/one_obstacle_jitter_r2 --seed 2 --device auto
+py eval_sac.py --task one_obstacle_jitter_r2 --model-dir experiments/sac/one_obstacle_jitter_r2 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task one_obstacle_jitter_r4 --load-from experiments/sac/one_obstacle_fixed --total-timesteps 600000 --out-dir experiments/sac/one_obstacle_jitter_r4 --seed 3 --device auto
+py eval_sac.py --task one_obstacle_jitter_r4 --model-dir experiments/sac/one_obstacle_jitter_r4 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task one_obstacle_jitter_r6 --load-from experiments/sac/one_obstacle_jitter_r4 --total-timesteps 700000 --out-dir experiments/sac/one_obstacle_jitter_r6 --seed 4 --device auto
+py eval_sac.py --task one_obstacle_jitter_r6 --model-dir experiments/sac/one_obstacle_jitter_r6 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task one_obstacle_random --load-from experiments/sac/one_obstacle_jitter_r4 --total-timesteps 800000 --out-dir experiments/sac/one_obstacle_random --seed 5 --device auto
+py eval_sac.py --task one_obstacle_random --model-dir experiments/sac/one_obstacle_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task two_obstacles_random --load-from experiments/sac/one_obstacle_random --total-timesteps 1000000 --out-dir experiments/sac/two_obstacles_random --seed 6 --device auto
+py eval_sac.py --task two_obstacles_random --model-dir experiments/sac/two_obstacles_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sac.py --task three_obstacles_random --load-from experiments/sac/two_obstacles_random --total-timesteps 1500000 --out-dir experiments/sac/three_obstacles_random --seed 7 --device auto
+py eval_sac.py --task three_obstacles_random --model-dir experiments/sac/three_obstacles_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+
+# =========================
+# SB3 PPO clean curriculum
+# Keep --n-steps 2048 for all continuation runs.
+# =========================
+
+py train_sb3_ppo.py --task free_fixed --total-timesteps 300000 --out-dir experiments/sb3_ppo/free_fixed --seed 0
+py eval_ppo.py --task free_fixed --model-dir experiments/sb3_ppo/free_fixed --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task free_jitter_r2 --load-from experiments/sb3_ppo/free_fixed --total-timesteps 300000 --out-dir experiments/custom_ppo/free_jitter_r2 --seed 1
+py eval_ppo.py --task free_jitter_r2 --model-dir experiments/sb3_ppo/free_jitter_r2 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task free_jitter_r5 --load-from experiments/sb3_ppo/free_jitter_r2 --total-timesteps 400000 --out-dir experiments/custom_ppo/free_jitter_r5 --seed 2
+py eval_sb3_ppo.py --task free_jitter_r5 --model-dir experiments/sb3_ppo/free_jitter_r5 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task free_random --total-timesteps 500000 --out-dir experiments/sb3_ppo/free_random --seed 0 --device auto --learning-rate 0.0003 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task free_random --model-dir experiments/sb3_ppo/free_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task one_obstacle_fixed --load-from experiments/sb3_ppo/free_random --total-timesteps 700000 --out-dir experiments/sb3_ppo/one_obstacle_fixed --seed 1 --device auto --learning-rate 0.0003 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task one_obstacle_fixed --model-dir experiments/sb3_ppo/one_obstacle_fixed --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task one_obstacle_jitter_r2 --load-from experiments/sb3_ppo/one_obstacle_fixed --total-timesteps 700000 --out-dir experiments/sb3_ppo/one_obstacle_jitter_r2 --seed 2 --device auto --learning-rate 0.0003 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task one_obstacle_jitter_r2 --model-dir experiments/sb3_ppo/one_obstacle_jitter_r2 --model-name best_model --episodes 200 --plot 20 --seed 121
+
+py scripts\train_sb3_ppo.py --task one_obstacle_jitter_r4 --load-from experiments/sb3_ppo/one_obstacle_jitter_r2 --total-timesteps 800000 --out-dir experiments/sb3_ppo/one_obstacle_jitter_r4 --seed 3 --device auto --learning-rate 0.00015 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task one_obstacle_jitter_r4 --model-dir experiments/sb3_ppo/one_obstacle_jitter_r4 --model-name best_model --episodes 200 --plot 20 --seed 121
+
+py train_sb3_ppo.py --task one_obstacle_jitter_r6 --load-from experiments/sb3_ppo/one_obstacle_jitter_r4 --total-timesteps 900000 --out-dir experiments/sb3_ppo/one_obstacle_jitter_r6 --seed 4 --device auto --learning-rate 0.00025 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task one_obstacle_jitter_r6 --model-dir experiments/sb3_ppo/one_obstacle_jitter_r6 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task one_obstacle_random --load-from experiments/sb3_ppo/one_obstacle_jitter_r6 --total-timesteps 1200000 --out-dir experiments/sb3_ppo/one_obstacle_random --seed 5 --device auto --learning-rate 0.00025 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.003
+py eval_sb3_ppo.py --task one_obstacle_random --model-dir experiments/sb3_ppo/one_obstacle_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task two_obstacles_random --load-from experiments/sb3_ppo/one_obstacle_random --total-timesteps 1500000 --out-dir experiments/sb3_ppo/two_obstacles_random --seed 6 --device auto --learning-rate 0.0002 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.002
+py eval_sb3_ppo.py --task two_obstacles_random --model-dir experiments/sb3_ppo/two_obstacles_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_sb3_ppo.py --task three_obstacles_random --load-from experiments/sb3_ppo/two_obstacles_random --total-timesteps 2000000 --out-dir experiments/sb3_ppo/three_obstacles_random --seed 7 --device auto --learning-rate 0.0002 --n-steps 2048 --batch-size 256 --n-epochs 10 --ent-coef 0.002
+py eval_sb3_ppo.py --task three_obstacles_random --model-dir experiments/sb3_ppo/three_obstacles_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+
+# =========================
+# Custom PPO clean curriculum
+# =========================
+
+py train_ppo.py --task free_fixed --total-timesteps 300000 --out-dir experiments/custom_ppo/free_fixed --seed 0
+py eval_ppo.py --task free_fixed --model-dir experiments/custom_ppo/free_fixed --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task free_jitter_r2 --load-from experiments/custom_ppo/free_fixed --total-timesteps 300000 --out-dir experiments/custom_ppo/free_jitter_r2 --seed 1
+py eval_ppo.py --task free_jitter_r2 --model-dir experiments/custom_ppo/free_jitter_r2 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task free_jitter_r5 --load-from experiments/custom_ppo/free_jitter_r2 --total-timesteps 400000 --out-dir experiments/custom_ppo/free_jitter_r5 --seed 2
+py eval_ppo.py --task free_jitter_r5 --model-dir experiments/custom_ppo/free_jitter_r5 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task free_random --load-from experiments/custom_ppo/free_jitter_r5 --total-timesteps 1000000 --out-dir experiments/custom_ppo/free_random --seed 3 --lr 0.0005 --entropy-coef 0.003
+py eval_ppo.py --task free_random --model-dir experiments/custom_ppo/free_random_from_r5 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task one_obstacle_fixed --load-from experiments/custom_ppo/free_jitter_r5 --total-timesteps 500000 --out-dir experiments/custom_ppo/one_obstacle_fixed --seed 4
+py eval_ppo.py --task one_obstacle_fixed --model-dir experiments/custom_ppo/one_obstacle_fixed --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task one_obstacle_jitter_r2 --load-from experiments/custom_ppo/one_obstacle_fixed --total-timesteps 700000 --out-dir experiments/custom_ppo/one_obstacle_jitter_r2 --seed 5
+py eval_ppo.py --task one_obstacle_jitter_r2 --model-dir experiments/custom_ppo/one_obstacle_jitter_r2 --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task one_obstacle_jitter_r4 --load-from experiments/custom_ppo/one_obstacle_jitter_r2 --total-timesteps 700000 --out-dir experiments/custom_ppo/one_obstacle_jitter_r4 --seed 5
+py eval_ppo.py --task one_obstacle_jitter_r4 --model-dir experiments/custom_ppo/one_obstacle_jitter_r4_safe --model-name best_model --episodes 100 --plot 20 --seed 123
+
+
+py train_ppo.py --task one_obstacle_jitter_r6 --load-from experiments/custom_ppo/one_obstacle_jitter_r4_safe --total-timesteps 700000 --out-dir experiments/custom_ppo/one_obstacle_jitter_r6 --seed 4 --device auto
+py eval_ppo.py --task one_obstacle_jitter_r6 --model-dir experiments/custom_ppo/one_obstacle_jitter_r6_safe_tuned --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task one_obstacle_random --load-from experiments/custom_ppo/one_obstacle_jitter_r6 --total-timesteps 800000 --out-dir experiments/custom_ppo/one_obstacle_random_from_jitter --seed 5 --device auto
+py eval_ppo.py --task one_obstacle_random --model-dir experiments/custom_ppo/one_obstacle_random_final_tuned --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task one_obstacle_random --load-from experiments/custom_ppo/free_random --total-timesteps 1500000 --out-dir experiments/custom_ppo/one_obstacle_random --seed 6 --lr 0.0003 --entropy-coef 0.003
+py eval_ppo.py --task one_obstacle_random --model-dir experiments/custom_ppo/one_obstacle_random --model-name best_model --episodes 100 --plot 20 --seed 123
+
+py train_ppo.py --task two_obstacles_random --load-from experiments/custom_ppo/one_obstacle_random_final_safety_tuned --total-timesteps 2000000 --out-dir experiments/custom_ppo/two_obstacles_random_from_one_obstacle_safety --seed 60 --lr 0.0001 --entropy-coef 0.0005 --target-kl 0.015
+py eval_ppo.py --task two_obstacles_random--model-dir experiments/custom_ppo/two_obstacles_random_from_one_obstacle_safety --model-name best_model --episodes 100 --plot 20 --seed 123

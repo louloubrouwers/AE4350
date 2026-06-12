@@ -1,0 +1,10 @@
+name,group,task,parent_dir,timesteps,seed,lr,entropy,clip,r_goal,r_progress,out_dir
+baseline_lr3e4_ent001_clip02_reward350_4,baseline,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.003,0.2,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\baseline_lr3e4_ent001_clip02_reward350_4
+lr_low_1p5e4,learning_rate,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.00015,0.003,0.2,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\lr_low_1p5e4
+lr_high_1e3,learning_rate,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.001,0.003,0.2,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\lr_high_1e3
+entropy_low_0,entropy,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.0,0.2,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\entropy_low_0
+entropy_high_005,entropy,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.008,0.2,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\entropy_high_005
+clip_low_01,ppo_clip,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.003,0.1,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\clip_low_01
+clip_high_03,ppo_clip,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.003,0.3,350.0,4.0,experiments\sensitivity\custom_ppo_one_obstacle_random\clip_high_03
+reward_low_300_3,reward,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.003,0.2,300.0,3.0,experiments\sensitivity\custom_ppo_one_obstacle_random\reward_low_300_3
+reward_high_450_6,reward,one_obstacle_random,experiments/custom_ppo/free_random_from_r5,1000000,500,0.0003,0.003,0.2,450.0,6.0,experiments\sensitivity\custom_ppo_one_obstacle_random\reward_high_450_6
