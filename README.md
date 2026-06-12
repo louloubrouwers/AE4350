@@ -85,7 +85,7 @@ Final version/
 │   ├── __init__.py
 │   ├── demo_sac_pygame.py
 │   ├── demo_sb3_ppo_pygame.py
-│   └── demo_custom_ppo_pygame.py
+│   └── demo_ppo_pygame.py
 │
 └── experiments/
     ├── sac/
@@ -238,52 +238,8 @@ The evaluation options are more flexible: they allow any trained model folder to
 
 ---
 
-## 6. Recommended quick demonstration
 
-For a short grading/demo session, run:
-
-```bash
-py run.py
-```
-
-Then choose:
-
-```text
-1. Run SAC demo on three_obstacles_random
-2. Run SAC demo on three_obstacles_wind
-3. Run SB3 PPO demo on one_obstacle_random
-4. Run custom PPO demo on one_obstacle_random
-5. Evaluate any SAC model on any task
-7. Evaluate any custom PPO model on any task
-```
-
-For the main report result, evaluate SAC on:
-
-```text
-three_obstacles_random
-```
-
-For the wind robustness extension, evaluate SAC on:
-
-```text
-three_obstacles_wind
-```
-
-For the custom PPO final comparison, evaluate custom PPO on:
-
-```text
-one_obstacle_random
-```
-
-with the low-learning-rate final model:
-
-```text
-experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003
-```
-
----
-
-## 7. Direct evaluation commands
+## 6. Direct evaluation commands
 
 The launcher is recommended, but the scripts can also be run directly.
 
@@ -325,7 +281,7 @@ They also save evaluation CSV files and trajectory plots.
 
 ---
 
-## 8. Direct training commands
+## 7. Direct training commands
 
 Training can take a long time. The commands below reproduce the main training style used in the project.
 
@@ -355,7 +311,7 @@ py scripts/train_ppo.py --task one_obstacle_random --load-from experiments/custo
 
 ---
 
-## 9. Suggested curriculum
+## 8. Suggested curriculum
 
 The general SAC curriculum is:
 
@@ -385,7 +341,7 @@ experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003
 
 ---
 
-## 10. Sensitivity analysis
+## 9. Sensitivity analysis
 
 Sensitivity scripts are located in:
 
@@ -464,7 +420,7 @@ reward design
 
 ---
 
-## 11. Generated outputs
+## 10. Generated outputs
 
 Training scripts generate model checkpoints and logs, for example:
 
@@ -502,69 +458,7 @@ comparative_plots/
 
 ---
 
-## 12. Reproducibility notes
-
-Small differences between runs are expected because reinforcement learning and randomized start-goal evaluation are stochastic.
-
-For fair comparison:
-
-- all algorithms use the same environment implementation,
-- all algorithms use the same final reward settings,
-- all final evaluations use the same task definitions,
-- evaluation reports success rate, collision rate, mean return, mean episode length, and mean path length,
-- sensitivity analysis changes one main parameter group or reward-design setting at a time.
-
-The launcher lists available model folders and suggests a task based on the selected folder name, but the user can still choose any task manually during evaluation.
-
----
-
-## 13. Troubleshooting
-
-### Import errors
-
-Run scripts from the project root:
-
-```bash
-py run.py
-```
-
-or:
-
-```bash
-py scripts/eval_sac.py --help
-```
-
-### Missing script errors
-
-If `run.py` reports that a script is missing, check that the corresponding file exists in the expected folder, for example:
-
-```text
-demos/
-scripts/
-sensitivity/
-```
-
-### Stable-Baselines3 installation
-
-If this fails:
-
-```bash
-pip install "stable-baselines3[extra]"
-```
-
-use:
-
-```bash
-pip install stable-baselines3
-```
-
-### Gym warning
-
-Some dependencies may print a warning about Gym being unmaintained. This can usually be ignored if the scripts run normally.
-
----
-
-## 14. Notes on model-task matching
+## 11. Notes on model-task matching
 
 The recommended demos intentionally use fixed model-task combinations. This avoids showing a model on a task for which it was not trained. For example, custom PPO is demonstrated on `one_obstacle_random`, while SAC is demonstrated on `three_obstacles_random`.
 
