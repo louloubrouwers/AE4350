@@ -1,75 +1,14 @@
-# FINAL VERSION - clean RL drone experiments
+# Reinforcement Learning for 2D Drone Navigation with Obstacle Avoidance
 
-This folder removes duplicated environment configuration logic from the old files.
+This project implements and compares reinforcement-learning controllers for a two-dimensional drone navigation task with obstacle avoidance. The drone must reach a goal while avoiding walls and rectangular no-fly zones using local ray-based sensing.
 
-## Single sources of truth
+The project compares:
 
-- `env_configs.py`: task definitions, obstacles, reward settings, and clean aliases.
-- `wrappers.py`: shared `DirectionalAvoidanceWrapper` and `make_env()`.
-- `eval_common.py`: shared evaluation, CSV saving, summary printing, trajectory plotting.
+- **Soft Actor-Critic (SAC)** from Stable-Baselines3
+- **PPO** from Stable-Baselines3
+- **Custom PPO**, a self-implemented PPO controller
 
-## Important design choice
-
-The one-obstacle curriculum now uses the same obstacle size for fixed, jittered, and random tasks:
-
-```python
-Obstacle(9.0, 8.5, 2.0, 3.0)
-```
-
-This is the old `smallobstaclebaby` size. The old large single obstacle is kept only as optional `one_tall_obstacle_random`.
-
-## Clean task names
-
-Recommended final names:
-
-```text
-free_fixed
-free_jitter_r2
-free_jitter_r5
-free_random
-one_obstacle_fixed
-one_obstacle_jitter_r2
-one_obstacle_jitter_r4
-one_obstacle_jitter_r6
-one_obstacle_random
-two_obstacles_random
-three_obstacles_random
-three_obstacles_wind
-```
-
-Final target:
-
-```text
-three_obstacles_random
-```
-
-## Suggested final curriculum
-
-For SAC and SB3 PPO:
-
-```text
-free_random
-→ one_obstacle_fixed
-→ one_obstacle_jitter_r2
-→ one_obstacle_jitter_r4
-→ one_obstacle_jitter_r6
-→ one_obstacle_random
-→ two_obstacles_random
-→ three_obstacles_random
-```
-
-For custom PPO, use the same tasks but it is acceptable if it only reaches `one_obstacle_random` robustly.
-# Bio-Inspired Drone Navigation with Reinforcement Learning
-
-This project compares reinforcement-learning controllers for a 2D drone navigation task with obstacle avoidance. The drone must reach a target while avoiding walls and rectangular no-fly zones using local ray-based sensing.
-
-The compared controllers are:
-
-- Soft Actor-Critic (SAC) from Stable-Baselines3
-- PPO from Stable-Baselines3
-- A self-implemented custom PPO controller
-
-The easiest way to run the project is with the interactive launcher:
+The easiest way to run the project is through the interactive launcher:
 
 ```bash
 py run.py
@@ -81,34 +20,36 @@ or:
 python run.py
 ```
 
-The launcher allows the user to evaluate trained models, run pygame demos, train models, generate sensitivity plots, and launch sensitivity experiments without remembering long command-line commands.
+The launcher provides recommended PyGame demonstrations, flexible evaluation for any trained model and task, training commands, sensitivity experiments, and sensitivity plot generation.
 
 ---
 
 ## 1. Installation
 
-Create and activate a virtual environment if desired, then install:
+Create and activate a virtual environment if desired, then install the requirements:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-If the optional Stable-Baselines3 extras fail to install, the base package is enough for this project:
+If the Stable-Baselines3 extra dependencies fail to install, the base package is sufficient for this project:
 
 ```bash
 pip install stable-baselines3
 ```
 
+Run all commands from the project root folder.
+
 ---
 
-## 2. Recommended project structure
+## 2. Project structure
 
 ```text
 Final version/
 │
 ├── run.py
 ├── requirements.txt
-├── README_CLEAN_FINAL.md
+├── README.md
 │
 ├── core/
 │   ├── __init__.py
@@ -130,7 +71,8 @@ Final version/
 │   ├── train_ppo.py
 │   ├── eval_sac.py
 │   ├── eval_sb3_ppo.py
-│   └── eval_ppo.py
+│   ├── eval_ppo.py
+│   └── evaluate_all_existing_models.py
 │
 ├── sensitivity/
 │   ├── __init__.py
@@ -142,45 +84,53 @@ Final version/
 ├── demos/
 │   ├── __init__.py
 │   ├── demo_sac_pygame.py
-│   └── demo_ppo_pygame.py
+│   ├── demo_sb3_ppo_pygame.py
+│   └── demo_custom_ppo_pygame.py
 │
 └── experiments/
     ├── sac/
     ├── sb3_ppo/
     ├── custom_ppo/
     ├── sensitivity_clean/
-    └── sac_sensitivity_clean/
+    └── sac_sensitivity_1500k/
 ```
 
 Folder roles:
 
 ```text
-core/          shared environment, task definitions, wrappers, evaluation helpers
-custom_ppo/    self-implemented PPO algorithm files
-scripts/       training and evaluation scripts
-sensitivity/   sensitivity experiments and comparative plotting scripts
-demos/         pygame visualization demos
-experiments/   generated models, logs, evaluation CSVs, and plots
+core/          Shared environment, task definitions, wrappers, and evaluation helpers
+custom_ppo/    Self-implemented PPO algorithm
+scripts/       Training and evaluation scripts
+sensitivity/   Sensitivity experiment and plotting scripts
+demos/         PyGame visualization demos
+experiments/   Trained models, logs, evaluation CSVs, and generated plots
 ```
 
 ---
 
 ## 3. Environment and tasks
 
-The environment is a 2D continuous-control drone navigation problem. The drone observes its own state, the goal direction, and local ray-based distances to nearby walls/obstacles. The action is a continuous 2D acceleration command.
+The environment is a two-dimensional continuous-control drone navigation problem. The drone observes:
 
-The final task definitions are in:
+- its position and velocity,
+- the goal position relative to the drone,
+- local ray-based distances to nearby walls and obstacles.
+
+The action is a continuous two-dimensional acceleration command.
+
+All final task definitions, obstacle layouts, reward settings, and aliases are centralized in:
 
 ```text
 core/env_configs.py
 ```
 
-Main tasks:
+The final task names are:
 
 ```text
 free_fixed
 free_jitter_r2
 free_jitter_r5
+free_jitter_r8
 free_random
 one_obstacle_fixed
 one_obstacle_jitter_r2
@@ -192,7 +142,7 @@ three_obstacles_random
 three_obstacles_wind
 ```
 
-The main final target task is:
+The main final benchmark is:
 
 ```text
 three_obstacles_random
@@ -204,11 +154,17 @@ The wind robustness task is:
 three_obstacles_wind
 ```
 
+The one-obstacle curriculum uses a consistent obstacle size for the fixed, jittered, and random one-obstacle tasks:
+
+```python
+Obstacle(9.0, 8.5, 2.0, 3.0)
+```
+
 ---
 
 ## 4. Reward settings
 
-The final shared reward setup is:
+All algorithms use the same final reward settings for fair comparison:
 
 ```python
 r_goal = 350.0
@@ -220,9 +176,9 @@ r_proximity = -0.01
 proximity_threshold = 1.0
 ```
 
-All algorithms use the same final reward settings for fair comparison.
+The reward function encourages the drone to reach the goal, make progress during the episode, avoid collisions, avoid excessive control inputs, and maintain a safety margin near obstacles and walls.
 
-For reward sensitivity analysis, the reward terms can be overridden using environment variables:
+For reward-sensitivity analysis, reward terms can be overridden using environment variables:
 
 ```text
 DRONE_R_GOAL
@@ -236,71 +192,142 @@ DRONE_PROXIMITY_THRESHOLD
 
 ---
 
-## 5. Easy use with `run.py`
+## 5. Interactive launcher
 
-From the root folder:
+Run the launcher from the project root:
 
 ```bash
 py run.py
 ```
 
-Menu options:
+The menu is organized by workflow:
 
 ```text
-1. Evaluate final SAC
-2. Evaluate final SB3 PPO
-3. Evaluate final custom PPO
-4. Run SAC pygame demo
-5. Run custom PPO pygame demo
-6. Generate custom PPO sensitivity plots
-7. Generate SAC sensitivity plots
-8. Train SAC
-9. Train SB3 PPO
-10. Train custom PPO
-11. Run custom PPO sensitivity
-12. Run SAC sensitivity
+Recommended PyGame demos:
+  1. Run SAC demo on three_obstacles_random
+  2. Run SAC demo on three_obstacles_wind
+  3. Run SB3 PPO demo on one_obstacle_random
+  4. Run custom PPO demo on one_obstacle_random
+
+Evaluation, any trained model/task:
+  5. Evaluate any SAC model on any task
+  6. Evaluate any SB3 PPO model on any task
+  7. Evaluate any custom PPO model on any task
+
+Training (long):
+  8. Train SAC
+  9. Train SB3 PPO
+ 10. Train custom PPO
+
+Sensitivity experiments (long):
+ 11. Run custom PPO sensitivity
+ 12. Run SAC sensitivity
+
+Sensitivity plots:
+ 13. Generate custom PPO sensitivity plots
+ 14. Generate SAC sensitivity plots
 ```
 
-For a quick demonstration, choose:
+The recommended PyGame demos use sensible task/model combinations for presentation:
+
+- SAC is demonstrated on the final three-obstacle task.
+- SAC can also be demonstrated on the wind robustness task.
+- SB3 PPO and custom PPO are demonstrated on the one-obstacle random task, where they learned more reliable obstacle-avoidance behaviour.
+
+The evaluation options are more flexible: they allow any trained model folder to be evaluated on any task. This is useful for reproducing final tables, checking intermediate curriculum models, or debugging.
+
+---
+
+## 6. Recommended quick demonstration
+
+For a short grading/demo session, run:
+
+```bash
+py run.py
+```
+
+Then choose:
 
 ```text
-1. Evaluate final SAC
-3. Evaluate final custom PPO
-4. Run SAC pygame demo
-5. Run custom PPO pygame demo
+1. Run SAC demo on three_obstacles_random
+2. Run SAC demo on three_obstacles_wind
+3. Run SB3 PPO demo on one_obstacle_random
+4. Run custom PPO demo on one_obstacle_random
+5. Evaluate any SAC model on any task
+7. Evaluate any custom PPO model on any task
+```
+
+For the main report result, evaluate SAC on:
+
+```text
+three_obstacles_random
+```
+
+For the wind robustness extension, evaluate SAC on:
+
+```text
+three_obstacles_wind
+```
+
+For the custom PPO final comparison, evaluate custom PPO on:
+
+```text
+one_obstacle_random
+```
+
+with the low-learning-rate final model:
+
+```text
+experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003
 ```
 
 ---
 
-## 6. Direct evaluation commands
+## 7. Direct evaluation commands
 
-### SAC
+The launcher is recommended, but the scripts can also be run directly.
+
+### SAC on the final task
 
 ```bash
-py scripts/eval_sac.py --task three_obstacles_random --model-dir experiments/sac/three_obstacles_random --model-name final_model --episodes 200 --plot 20 --seed 123
+py scripts/eval_sac.py --task three_obstacles_random --model-dir experiments/sac/three_obstacles_random --model-name best_model --episodes 200 --plot 20 --seed 123
 ```
 
 ### SAC wind robustness
 
 ```bash
-py scripts/eval_sac.py --task three_obstacles_wind --model-dir experiments/sac/three_obstacles_wind_from_random --model-name final_model --episodes 200 --plot 20 --seed 123
+py scripts/eval_sac.py --task three_obstacles_wind --model-dir experiments/sac/three_obstacles_wind_from_random --model-name best_model --episodes 200 --plot 20 --seed 123
 ```
 
 ### SB3 PPO
 
 ```bash
-py scripts/eval_sb3_ppo.py --task three_obstacles_random --model-dir experiments/sb3_ppo/three_obstacles_random --model-name final_model --episodes 200 --plot 20 --seed 123
+py scripts/eval_sb3_ppo.py --task one_obstacle_random --model-dir experiments/sb3_ppo/one_obstacle_random_from_free_random --model-name best_model --episodes 200 --plot 20 --seed 123
 ```
 
 ### Custom PPO
 
 ```bash
-py scripts/eval_ppo.py --task one_obstacle_random --model-dir experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003 --model-name final_model --episodes 200 --plot 20 --seed 900
+py scripts/eval_ppo.py --task one_obstacle_random --model-dir experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003 --model-name best_model --episodes 200 --plot 20 --seed 123
 ```
+
+The evaluation scripts report:
+
+```text
+success rate
+collision rate
+mean return
+mean number of steps
+mean path length
+```
+
+They also save evaluation CSV files and trajectory plots.
 
 ---
 
-## 7. Direct training commands
+## 8. Direct training commands
+
+Training can take a long time. The commands below reproduce the main training style used in the project.
 
 ### SAC
 
@@ -308,10 +335,16 @@ py scripts/eval_ppo.py --task one_obstacle_random --model-dir experiments/custom
 py scripts/train_sac.py --task three_obstacles_random --load-from experiments/sac/two_obstacles_random --total-timesteps 1000000 --out-dir experiments/sac/three_obstacles_random --learning-rate 0.0003 --ent-coef auto
 ```
 
+### SAC wind fine-tuning
+
+```bash
+py scripts/train_sac.py --task three_obstacles_wind --load-from experiments/sac/three_obstacles_random --total-timesteps 1000000 --out-dir experiments/sac/three_obstacles_wind_from_random --learning-rate 0.0003 --ent-coef auto
+```
+
 ### SB3 PPO
 
 ```bash
-py scripts/train_sb3_ppo.py --task three_obstacles_random --load-from experiments/sb3_ppo/two_obstacles_random --total-timesteps 1000000 --out-dir experiments/sb3_ppo/three_obstacles_random --learning-rate 0.0003
+py scripts/train_sb3_ppo.py --task one_obstacle_random --load-from experiments/sb3_ppo/one_obstacle_random_from_free_random --total-timesteps 1000000 --out-dir experiments/sb3_ppo/one_obstacle_random_from_free_random --learning-rate 0.0003 --ent-coef 0.001 --load-model-name best_model
 ```
 
 ### Custom PPO
@@ -322,7 +355,43 @@ py scripts/train_ppo.py --task one_obstacle_random --load-from experiments/custo
 
 ---
 
-## 8. Sensitivity analysis
+## 9. Suggested curriculum
+
+The general SAC curriculum is:
+
+```text
+free_random
+→ one_obstacle_fixed
+→ one_obstacle_jitter_r2
+→ one_obstacle_jitter_r4
+→ one_obstacle_jitter_r6
+→ one_obstacle_random
+→ two_obstacles_random
+→ three_obstacles_random
+→ three_obstacles_wind
+```
+
+For SB3 PPO and custom PPO, the same task family can be used, but these methods are less reliable on the hardest multi-obstacle tasks. The most relevant final demonstration for the PPO variants is therefore:
+
+```text
+one_obstacle_random
+```
+
+The custom PPO model used in the report is the low-learning-rate one-obstacle model:
+
+```text
+experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003
+```
+
+---
+
+## 10. Sensitivity analysis
+
+Sensitivity scripts are located in:
+
+```text
+sensitivity/
+```
 
 ### Custom PPO sensitivity
 
@@ -344,19 +413,19 @@ Run:
 py sensitivity/custom_ppo_sensitivity.py --parent-dir experiments/custom_ppo/free_random_from_r5 --task one_obstacle_random --timesteps 1000000 --base-out experiments/sensitivity_clean
 ```
 
-Generate comparative plots:
+Generate plots:
 
 ```bash
-py sensitivity/make_sensitivity_plots_ppo.py --base-dir experiments/sensitivity_clean --task one_obstacle_random --model-name final_model
+py sensitivity/make_sensitivity_plots_ppo.py --base-dir experiments/sensitivity_clean --task one_obstacle_random --model-name best_model
 ```
 
-Tested parameters:
+Tested parameter groups:
 
 ```text
-learning rate: 0.00015 / 0.0003 / 0.001
-entropy coefficient: 0.001 / 0.003 / 0.008
-PPO clipping coefficient: 0.05 / 0.2 / 0.4
-reward design: baseline, weak guidance, aggressive goal, weak safety, safety focused
+learning rate
+entropy coefficient
+PPO clipping coefficient
+reward design
 ```
 
 ### SAC sensitivity
@@ -376,36 +445,44 @@ experiments/sac/two_obstacles_random
 Run:
 
 ```bash
-py sensitivity/sac_sensitivity.py --parent-dir experiments/sac/two_obstacles_random --task three_obstacles_random --timesteps 500000 --base-out experiments/sac_sensitivity_clean
+py sensitivity/sac_sensitivity.py --parent-dir experiments/sac/two_obstacles_random --task three_obstacles_random --timesteps 1500000 --base-out experiments/sac_sensitivity_1500k
 ```
 
-Generate comparative plots:
+Generate plots:
 
 ```bash
-py sensitivity/make_sensitivity_plots_sac.py --base-dir experiments/sac_sensitivity_clean --task three_obstacles_random --model-name final_model
+py sensitivity/make_sensitivity_plots_sac.py --base-dir experiments/sac_sensitivity_1500k --task three_obstacles_random --model-name best_model
 ```
 
-Tested parameters:
+Tested parameter groups:
 
 ```text
-learning rate: 0.0001 / 0.0003 / 0.001
-entropy coefficient: 0.01 / auto / 0.1
-reward design: baseline, weak guidance, aggressive goal, weak safety, safety focused
+learning rate
+entropy coefficient
+reward design
 ```
 
 ---
 
-## 9. Generated outputs
+## 11. Generated outputs
 
-Training scripts generate:
+Training scripts generate model checkpoints and logs, for example:
 
 ```text
-best_model or best_model.zip
-final_model or final_model.zip
+best_model.zip or best_model.pt
+final_model.zip or final_model.pt
 training_log.csv
 learning_curve_success.png
 learning_curve_return.png
 learning_curve_collision.png
+```
+
+Stable-Baselines3 runs may also generate normalization files:
+
+```text
+best_vecnormalize.pkl
+final_vecnormalize.pkl
+vecnormalize.pkl
 ```
 
 Evaluation scripts generate:
@@ -415,7 +492,7 @@ evaluation_<task>_<model_name>.csv
 trajectories_<task>_<model_name>.png
 ```
 
-Sensitivity plot scripts generate:
+Sensitivity scripts generate summaries and comparative plots, for example:
 
 ```text
 sensitivity_summary.csv
@@ -425,24 +502,27 @@ comparative_plots/
 
 ---
 
-## 10. Reproducibility notes
+## 12. Reproducibility notes
 
 Small differences between runs are expected because reinforcement learning and randomized start-goal evaluation are stochastic.
 
 For fair comparison:
 
-- all algorithms use the same environment and reward settings
-- the same task definitions are used for training and evaluation
-- evaluation reports success rate, collision rate, mean return, mean episode length, and mean path length
-- sensitivity analysis varies one main parameter or reward-design setting at a time
+- all algorithms use the same environment implementation,
+- all algorithms use the same final reward settings,
+- all final evaluations use the same task definitions,
+- evaluation reports success rate, collision rate, mean return, mean episode length, and mean path length,
+- sensitivity analysis changes one main parameter group or reward-design setting at a time.
+
+The launcher lists available model folders and suggests a task based on the selected folder name, but the user can still choose any task manually during evaluation.
 
 ---
 
-## 11. Troubleshooting
+## 13. Troubleshooting
 
-### Import errors after reorganizing folders
+### Import errors
 
-Run scripts from the project root, for example:
+Run scripts from the project root:
 
 ```bash
 py run.py
@@ -452,6 +532,16 @@ or:
 
 ```bash
 py scripts/eval_sac.py --help
+```
+
+### Missing script errors
+
+If `run.py` reports that a script is missing, check that the corresponding file exists in the expected folder, for example:
+
+```text
+demos/
+scripts/
+sensitivity/
 ```
 
 ### Stable-Baselines3 installation
@@ -468,27 +558,14 @@ use:
 pip install stable-baselines3
 ```
 
-The base package is sufficient for this project.
-
 ### Gym warning
 
 Some dependencies may print a warning about Gym being unmaintained. This can usually be ignored if the scripts run normally.
 
 ---
 
-## 12. Suggested quick grading demo
+## 14. Notes on model-task matching
 
-Run:
+The recommended demos intentionally use fixed model-task combinations. This avoids showing a model on a task for which it was not trained. For example, custom PPO is demonstrated on `one_obstacle_random`, while SAC is demonstrated on `three_obstacles_random`.
 
-```bash
-py run.py
-```
-
-Then choose:
-
-```text
-1. Evaluate final SAC
-3. Evaluate final custom PPO
-4. Run SAC pygame demo
-5. Run custom PPO pygame demo
-```
+The evaluation options are intentionally more flexible, because they are meant for checking any trained model on any task. When using flexible evaluation, choose a task that matches the selected model folder unless the goal is explicitly to test transfer or robustness.
