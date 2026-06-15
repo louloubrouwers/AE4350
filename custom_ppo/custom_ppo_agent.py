@@ -2,16 +2,14 @@
 ppo.py
 PPO agent for the continuous drone-navigation environment.
 
-This file contains the "teacher" part of the project: it takes one full
-RolloutBuffer, computes PPO's clipped policy loss + value loss + entropy bonus,
+This file takes one full RolloutBuffer, computes PPO's clipped policy loss + value loss + entropy bonus,
 and updates the actor/critic networks with Adam.
 
 Core PPO idea:
     ratio = pi_new(a|s) / pi_old(a|s)
     policy_loss = -mean(min(ratio*A, clip(ratio, 1-eps, 1+eps)*A))
 
-The negative sign is because PyTorch optimizers minimize losses, while PPO's
-surrogate objective is normally written as something to maximize.
+The negative sign is because PyTorch optimizers minimize losses
 """
 
 from __future__ import annotations
@@ -51,7 +49,7 @@ class PPOConfig:
 
 
 class PPOAgent:
-    """Actor-critic PPO agent for continuous action spaces."""
+    """Actor-critic PPO agent"""
 
     def __init__(
         self,
@@ -122,8 +120,6 @@ class PPOAgent:
         """
         Run several epochs of minibatch PPO updates over one completed rollout.
 
-        The buffer must already contain computed advantages and returns.
-        Returns a dictionary of scalar diagnostics for logging.
         """
         assert buffer.full, "Cannot update from an incomplete rollout buffer."
 

@@ -1,6 +1,6 @@
 """
 wrappers.py
-Shared wrappers and environment factories used by all algorithms.
+Shared wrappers and environment characteristics used by all algorithms.
 """
 
 from __future__ import annotations
@@ -27,11 +27,9 @@ class DirectionalAvoidanceWrapper(gym.Wrapper):
     """
     Adds directional obstacle-avoidance shaping using the ray sensors.
 
-    If the drone is close to the nearest sensed obstacle/wall:
-        - moving toward danger is penalized;
-        - moving away from danger is rewarded.
-
-    This wrapper is shared by SAC, SB3 PPO, and custom PPO.
+    If the drone is close to the nearest sensed obstacle/wall: 
+    moving toward danger is penalize and moving away from danger is rewarded.
+    This wrapper is used for SAC, SB3 PPO, and custom PPO.
     """
 
     def __init__(
@@ -83,7 +81,6 @@ class DirectionalAvoidanceWrapper(gym.Wrapper):
 
 
 def make_env(task: str, seed: Optional[int] = None, monitor: bool = False):
-    """Create the raw Gymnasium environment used by custom PPO and demos."""
     env = DroneNavEnv(config=make_config(task))
     env = DirectionalAvoidanceWrapper(env, **DIRECTIONAL_AVOIDANCE_SETTINGS)
 
@@ -101,7 +98,14 @@ def make_env(task: str, seed: Optional[int] = None, monitor: bool = False):
 
 
 def unwrap_drone_env(env):
-    """Find the underlying DroneNavEnv under wrappers/VecNormalize/DummyVecEnv."""
+    """
+    Return the underlying DroneNavEnv from a possibly wrapped environment.
+
+    Stable-Baselines3 wraps environments in objects such as VecNormalize,
+    DummyVecEnv, Monitor, and custom Gym wrappers. This helper walks through
+    those layers so evaluation code can access DroneNavEnv-specific fields
+    such as position, goal, obstacles, and trajectory.
+    """
     current = env
 
     # VecNormalize -> DummyVecEnv
