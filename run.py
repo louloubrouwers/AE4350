@@ -451,9 +451,9 @@ def main() -> None:
     # ------------------------------------------------------------------
 
     elif choice == "13":
-        base_dir = ask_sensitivity_dir("experiments/sensitivity_clean")
-        task = ask("Task", "one_obstacle_random")
-        model_name = ask_model_name("best_model")
+        base_dir = "experiments/custom_ppo_sensitivity"
+        task = "one_obstacle_random"
+        model_name = "final_model"
 
         run([
             py, existing_script("sensitivity/make_sensitivity_plots_ppo.py"),
@@ -463,9 +463,9 @@ def main() -> None:
         ])
 
     elif choice == "14":
-        base_dir = ask_sensitivity_dir("experiments/sac_sensitivity_1500k")
-        task = ask("Task", "three_obstacles_random")
-        model_name = ask_model_name("best_model")
+        base_dir = "experiments/sac_sensitivity"
+        task = "three_obstacles_random"
+        model_name = "best_model"
 
         run([
             py, existing_script("sensitivity/make_sensitivity_plots_sac.py"),

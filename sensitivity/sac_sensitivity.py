@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from core import env_configs
 
 REWARD_KEYS = [
     "r_goal",
@@ -120,14 +121,6 @@ def check_reward_override(task: str) -> None:
     Verifies that env_configs.py reads all DRONE_* reward overrides.
     Works both before and after moving env_configs.py into core/.
     """
-    try:
-        import core.env_configs
-    except Exception:
-        try:
-            from core import env_configs
-        except Exception as exc:
-            print(f"WARNING: could not import env_configs.py for reward-override check: {exc}")
-            return
 
     old_env = {key: os.environ.get("DRONE_" + key.upper()) for key in REWARD_KEYS}
 
