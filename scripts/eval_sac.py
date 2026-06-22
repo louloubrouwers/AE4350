@@ -1,4 +1,4 @@
-"""eval_sac.py - clean evaluator for SB3 SAC models."""
+"""eval_sac.py -  evaluator for SB3 SAC models."""
 from __future__ import annotations
 
 import argparse

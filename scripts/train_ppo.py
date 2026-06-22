@@ -1,6 +1,6 @@
 """
 train_ppo.py
-Clean self-implemented PPO baseline.
+self-implemented PPO baseline.
 
 This script uses the SAME task definitions, reward settings, and wrapper logic
 as SAC and SB3 PPO:
@@ -8,8 +8,6 @@ as SAC and SB3 PPO:
     - env_configs.py  -> tasks, obstacles, rewards
     - wrappers.py     -> make_env() and DirectionalAvoidanceWrapper
 
-So the custom PPO comparison is fair and does not silently use old curriculum
-names such as babyfixed / singlefixed / obstaclebaby.
 """
 
 from __future__ import annotations

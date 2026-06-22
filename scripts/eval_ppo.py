@@ -1,4 +1,4 @@
-"""eval_ppo.py - clean evaluator for the custom PPO baseline."""
+"""eval_ppo.py -  evaluator for the custom PPO baseline."""
 from __future__ import annotations
 
 import argparse

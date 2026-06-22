@@ -1,11 +1,9 @@
 """
-Clean pygame visualization for a trained Stable-Baselines3 SAC drone policy.
+Pygame visualization for a trained Stable-Baselines3 SAC drone policy.
 
-The info panel is drawn to the right of the environment. For wind tasks, a
-light-blue wind/gust field is visualized on the map.
+For wind tasks, a light-blue wind/gust field is visualized on the map.
+Can be ran through run.py
 
-Example:
-    py demos/demo_sac_pygame.py --task three_obstacles_wind --model-dir experiments/sac/three_obstacles_wind_from_random --model-name best_model
 """
 from __future__ import annotations
 

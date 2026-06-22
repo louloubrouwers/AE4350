@@ -1,4 +1,4 @@
-"""eval_sb3_ppo.py - clean evaluator for Stable-Baselines3 PPO models."""
+"""eval_sb3_ppo.py - evaluator for Stable-Baselines3 PPO models."""
 from __future__ import annotations
 
 import argparse

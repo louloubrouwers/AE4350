@@ -1,6 +1,6 @@
 """
 train_sac.py
-Clean Stable-Baselines3 SAC training.
+Stable-Baselines3 SAC training.
 
 Uses shared env_configs.py and wrappers.py, so SAC uses exactly the same tasks
 and reward shaping as SB3 PPO and custom PPO.

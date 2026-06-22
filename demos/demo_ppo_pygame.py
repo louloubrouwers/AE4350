@@ -1,10 +1,7 @@
 """
-Clean pygame visualization for a trained custom PPO drone policy.
+Pygame visualization for a trained custom PPO drone policy.
 
-The info panel is drawn to the right of the environment.
-
-Example:
-    py demos/demo_ppo_pygame.py --task one_obstacle_random --model-dir experiments/custom_ppo/one_obstacle_random_final_lrlow_ent003 --model-name best_model
+can be ran through run.py
 """
 from __future__ import annotations
 

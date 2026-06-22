@@ -1,11 +1,9 @@
 """
-Clean pygame visualization for a trained Stable-Baselines3 PPO drone policy.
+Pygame visualization for a trained Stable-Baselines3 PPO drone policy.
 
-The info panel is drawn to the right of the environment.
-
-Example:
-    py demos/demo_sb3_ppo_pygame.py --task one_obstacle_random --model-dir experiments/sb3_ppo/one_obstacle_random_from_free_random_safe_tuned --model-name best_model
+Can be run through run.py 
 """
+
 from __future__ import annotations
 
 import argparse

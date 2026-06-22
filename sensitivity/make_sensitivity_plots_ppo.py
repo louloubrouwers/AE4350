@@ -1,29 +1,14 @@
+
 """
-make_sensitivity_plots_corrected.py
+Create plots and a summary table for the custom PPO sensitivity runs.
 
-Creates summary tables and comparative plots for the corrected custom PPO
-sensitivity run.
+The script reads sensitivity_cases.csv, training_log.csv, and the evaluation
+CSV files from each case folder. It writes sensitivity_summary.csv and the
+comparison figures used in the report.
 
-Expected folder:
-    experiments/sensitivity/custom_ppo_one_obstacle_random_corrected/
-
-Outputs:
-    sensitivity_summary.csv
-    comparative_plots/success_learning_rate.png
-    comparative_plots/collision_learning_rate.png
-    comparative_plots/return_learning_rate.png
-    comparative_plots/success_entropy.png
-    comparative_plots/success_ppo_clip.png
-    comparative_plots/success_reward.png
-    comparative_plots/final_success_by_case.png
-    comparative_plots/final_collision_by_case.png
-
-Example:
-    py make_sensitivity_plots_corrected.py ^
-        --base-dir experiments/sensitivity/custom_ppo_one_obstacle_random_corrected ^
-        --task one_obstacle_random ^
-        --model-name final_model
 """
+
+
 
 from __future__ import annotations
 

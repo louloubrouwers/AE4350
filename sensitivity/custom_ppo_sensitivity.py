@@ -1,12 +1,5 @@
 """
-run_custom_ppo_sensitivity_final.py
-
-Runs the final clean sensitivity analysis for the self-implemented PPO controller.
-
-Recommended use in this project:
-    Parent: experiments/custom_ppo/free_random_from_r5
-    Task: one_obstacle_random
-    Output: experiments/sensitivity_clean
+Runs the final sensitivity analysis for the self-implemented PPO controller.
 
 Purpose:
     Test how sensitive custom PPO is when adapting from a free-random navigation
@@ -31,26 +24,6 @@ Reward cases:
     weak safety:         weaker collision/proximity penalties
     safety focused:      stronger collision/proximity penalties
 
-IMPORTANT:
-    env_configs.py must support reward overrides through environment variables:
-
-        import os
-
-        def apply_final_rewards(cfg: EnvConfig) -> EnvConfig:
-            settings = dict(REWARD_SETTINGS)
-            for key in list(settings.keys()):
-                env_key = "DRONE_" + key.upper()
-                if env_key in os.environ:
-                    settings[key] = float(os.environ[env_key])
-            for key, value in settings.items():
-                setattr(cfg, key, value)
-            return cfg
-
-Run:
-    py run_custom_ppo_sensitivity_final.py --parent-dir experiments/custom_ppo/free_random_from_r5 --task one_obstacle_random --timesteps 1000000 --base-out experiments/sensitivity_clean
-
-Dry run:
-    py run_custom_ppo_sensitivity_final.py --parent-dir experiments/custom_ppo/free_random_from_r5 --task one_obstacle_random --dry-run --base-out experiments/sensitivity_clean
 """
 
 from __future__ import annotations
@@ -77,12 +50,7 @@ REWARD_KEYS = [
 
 
 def build_cases() -> List[Dict]:
-    """
-    Final custom PPO sensitivity matrix.
-
-    Baseline appears once. For each group, the lower and higher variants are
-    added, because the baseline already provides the middle/reference value.
-    """
+    """Sensitivity cases used for the custom PPO runs."""
     base = {
         "lr": 3e-4,
         "entropy": 0.003,
@@ -221,9 +189,7 @@ def run_command(cmd: List[str], env: Optional[Dict[str, str]] = None, dry_run: b
 
 
 def check_reward_override(task: str) -> None:
-    """
-    Verifies that env_configs.py reads all DRONE_* reward overrides.
-    """
+    """Check that reward overrides are picked up by the task config."""
    
 
     old_env = {key: os.environ.get("DRONE_" + key.upper()) for key in REWARD_KEYS}

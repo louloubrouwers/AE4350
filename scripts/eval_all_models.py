@@ -3,23 +3,7 @@ evaluate_all_existing_models.py
 
 Evaluate all existing SAC, SB3 PPO, and custom PPO model folders and create one
 summary CSV table with success rate, collision rate, mean return, mean steps, and
-mean path length.
-
-Default behavior:
-- Scans:
-    experiments/sac
-    experiments/sb3_ppo
-    experiments/custom_ppo
-- For each model folder, infers the task from the folder name using the clean
-  task names from core.env_configs.
-- Evaluates best_model if it exists, otherwise final_model.
-- Skips evaluations whose CSV already exists.
-- Writes:
-    experiments/all_model_evaluations_summary.csv
-
-Run from the project root:
-    py scripts/evaluate_all_existing_models.py --episodes 200 --plot 20 --seed 123
-"""
+mean path length. """
 
 from __future__ import annotations
 

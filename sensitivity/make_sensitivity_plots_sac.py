@@ -1,12 +1,11 @@
 """
-make_sac_sensitivity_plots_final.py
+Create plots and a summary table for the SAC sensitivity runs.
 
-Creates summary tables and comparative plots for the final SAC sensitivity run.
+The script reads sac_sensitivity_cases.csv, training logs, and evaluation CSVs
+from each case folder. It then writes sac_sensitivity_summary.csv and the
+comparison figures used in the report.
 
-Run:
-    py make_sac_sensitivity_plots_final.py --base-dir experiments/sac_sensitivity_clean --task three_obstacles_random --model-name final_model
 """
-
 from __future__ import annotations
 
 import argparse

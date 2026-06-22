@@ -1,19 +1,13 @@
-"""
-sac_sensitivity.py
 
-Corrected SAC sensitivity script:
-- Removes manual entropy-coefficient cases, because the parent SAC model was trained
-  with ent_coef="auto". Continuing from an auto-entropy SAC checkpoint with fixed
-  ent_coef values can break Stable-Baselines3 loading.
-- Keeps only learning-rate and reward-design sensitivity.
-- Skips cases that already have an evaluation CSV, so completed baseline / LR
-  runs are not repeated.
-- If a case already has a trained final_model but no evaluation CSV, it only runs
-  evaluation for that case.
-
-Recommended command:
-    py sac_sensitivity.py --parent-dir experiments/sac/two_obstacles_random --task three_obstacles_random --timesteps 500000 --base-out experiments/sac_sensitivity_clean
 """
+Run the SAC sensitivity experiments.
+
+The script continues training from a parent SAC checkpoint on
+three_obstacles_random while varying learning rate and reward settings. SAC is
+kept with automatic entropy tuning, matching the parent model. 
+
+"""
+
 
 from __future__ import annotations
 
@@ -40,11 +34,10 @@ REWARD_KEYS = [
 
 def build_cases() -> List[Dict]:
     """
-    Final SAC sensitivity matrix.
+    Sensitivity cases for SAC.
 
-    Entropy sensitivity is intentionally not included. SAC uses automatic entropy
-    tuning in the baseline and parent checkpoint. Fixed entropy coefficients are
-    not directly comparable when continuing from that parent model.
+    Entropy is kept automatic because the parent SAC checkpoint was trained with
+    ent_coef="auto".
     """
     base = {
         "learning_rate": 3e-4,
@@ -119,7 +112,6 @@ def run_command(cmd: List[str], env: Optional[Dict[str, str]] = None, dry_run: b
 def check_reward_override(task: str) -> None:
     """
     Verifies that env_configs.py reads all DRONE_* reward overrides.
-    Works both before and after moving env_configs.py into core/.
     """
 
     old_env = {key: os.environ.get("DRONE_" + key.upper()) for key in REWARD_KEYS}
