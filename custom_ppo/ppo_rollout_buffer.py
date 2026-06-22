@@ -7,25 +7,6 @@ the current policy. PPO collects `rollout_steps` transitions, computes advantage
 and value targets, runs several gradient steps over the batch, and then discards
 it (this is what makes PPO *on-policy*).
 
-Stored per timestep:
-    state       -- observation BEFORE the action was taken
-    action      -- action taken
-    log_prob    -- log pi_old(a|s), needed for the importance ratio later
-    reward      -- env reward
-    value       -- V_old(s), used in advantage calc
-    done        -- True if episode terminated (NOT truncated) at this step
-
-Computed at end of rollout:
-    advantages  -- GAE-lambda advantages
-    returns     -- value targets = advantages + values  (the "lambda-return")
-
-Note on `done` vs `truncated`:
-    In Gymnasium, terminated=True means a true terminal state (goal/collision
-    here) -- future return is genuinely zero. truncated=True is just a time
-    limit and the episode could have continued. PPO/GAE should bootstrap with
-    V(s_next) on truncation but NOT on termination. We track this via `done`
-    (terminated only) plus a final-value bootstrap parameter passed to
-    `compute_returns_and_advantages`.
 """
 
 from __future__ import annotations
@@ -169,7 +150,7 @@ class RolloutBuffer:
 
 
 # ---------------------------------------------------------------------------
-# Smoke test
+#  test
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":

@@ -1,22 +1,9 @@
 """
-networks.py
-Actor and Critic networks for PPO on continuous control.
+Actor and critic networks used by the custom PPO agent.
 
-Actor:
-    state -> (mu, log_std) parameterizing a Gaussian over actions.
-    The action mean mu is state-dependent (network output).
-    The log standard deviation log_std is a state-INDEPENDENT learnable
-    parameter, initialized to log(0.5)≈-0.7 for less noisy exploration. This is the standard PPO trick
-    (Schulman et al., 2017): it's simpler, more stable, and works fine for
-    most continuous-control tasks. The std can shrink as training progresses,
-    naturally reducing exploration as the policy becomes confident.
-
-Critic:
-    state -> scalar value estimate V(s).
-
-Both are 2-hidden-layer MLPs with tanh activations and orthogonal weight
-initialization (also standard in PPO implementations -- matters more than
-people expect for stability).
+The actor outputs a Gaussian policy for the continuous acceleration commands.
+The critic estimates the scalar value function V(s). Both networks use two
+hidden layers with tanh activations and orthogonal initialization.
 """
 
 from __future__ import annotations
@@ -41,21 +28,7 @@ def _orthogonal_init(layer: nn.Linear, gain: float = np.sqrt(2.0)) -> nn.Linear:
 # ---------------------------------------------------------------------------
 
 class GaussianActor(nn.Module):
-    """
-    Stochastic Gaussian policy for continuous action spaces.
-
-    Forward output is the action *mean* mu(s). The standard deviation is
-    state-independent: a single learnable vector log_std of size action_dim.
-    The full action distribution at state s is Normal(mu(s), exp(log_std)).
-
-    Actions are sampled in the raw (unbounded) space; we rely on the
-    environment to clip them into [-1, 1] (which DroneNavEnv does). This is
-    a deliberate choice -- a tanh-squashed policy (as in SAC) would require
-    a log-prob correction term that complicates the implementation. For
-    PPO with clipped actions, the simple Gaussian is the standard and
-    works well.
-    """
-    # chosen network desing: design choice is a compact 2-layer 
+    # chosen network desing: compact 2-layer 
     # feedforward network with 128 neurons per layer.
     def __init__(
         self,
@@ -64,7 +37,7 @@ class GaussianActor(nn.Module):
         hidden_sizes: Tuple[int, int] = (128, 128),
         log_std_init: float = -0.7,  #moderate exploration (not too random not too deterministic)
     ):
-        super().__init__()   #initialize parent PyTorch class nn.Module
+        super().__init__()  
         h1, h2 = hidden_sizes
         self.trunk = nn.Sequential(
             _orthogonal_init(nn.Linear(state_dim, h1)),   #transform the observation vector into 128 hidden features

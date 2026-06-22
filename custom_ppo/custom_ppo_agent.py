@@ -1,6 +1,6 @@
 """
 ppo.py
-PPO agent for the continuous drone-navigation environment.
+PPO agent 
 
 This file takes one full RolloutBuffer, computes PPO's clipped policy loss + value loss + entropy bonus,
 and updates the actor/critic networks with Adam.
@@ -37,7 +37,7 @@ class PPOConfig:
     clip_coef: float = 0.2
     value_coef: float = 0.5
     entropy_coef: float = 0.01
-    target_kl: Optional[float] = None  # e.g. 0.03 for early stopping, None = off
+    target_kl: Optional[float] = None  
 
     # Advantage calculation
     gamma: float = 0.99
@@ -67,8 +67,7 @@ class PPOAgent:
         self.actor = GaussianActor(state_dim, action_dim, hidden_sizes=hidden_sizes).to(self.device)
         self.critic = Critic(state_dim, hidden_sizes=hidden_sizes).to(self.device)
 
-        # One optimizer for both networks is common in PPO. Separate optimizers
-        # would also work; this keeps the implementation compact.
+
         self.optimizer = torch.optim.Adam(
             list(self.actor.parameters()) + list(self.critic.parameters()),
             lr=self.cfg.learning_rate,
@@ -81,15 +80,7 @@ class PPOAgent:
 
     @torch.no_grad()
     def select_action(self, state: np.ndarray) -> Tuple[np.ndarray, float, float]:
-        """
-        Sample one stochastic action from the actor.
-
-        Returns:
-            action: raw continuous action, shape (action_dim,). The environment
-                    clips to [-1, 1], so we do not clip here.
-            log_prob: log pi_old(a|s), needed by PPO's importance ratio.
-            value: V_old(s), needed by GAE.
-        """
+        
         state_t = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
         action_t, log_prob_t = self.actor.act(state_t)
         value_t = self.critic(state_t)
@@ -117,11 +108,8 @@ class PPOAgent:
     # ------------------------------------------------------------------
 
     def update(self, buffer: RolloutBuffer) -> Dict[str, float]:
-        """
-        Run several epochs of minibatch PPO updates over one completed rollout.
-
-        """
-        assert buffer.full, "Cannot update from an incomplete rollout buffer."
+        """Run several epochs of minibatch PPO updates over one completed rollout."""
+        assert buffer.full, "RolloutBuffer must be full before calling update()"
 
         policy_losses = []
         value_losses = []
@@ -151,7 +139,6 @@ class PPOAgent:
                 log_ratio = new_log_probs - old_log_probs
                 ratio = log_ratio.exp()
 
-                # PPO clipped surrogate objective.
                 unclipped = ratio * advantages
                 clipped = torch.clamp(
                     ratio,
@@ -200,7 +187,6 @@ class PPOAgent:
             if early_stop:
                 break
 
-        # log_std is useful: it tells you whether exploration is shrinking.
         with torch.no_grad():
             std_mean = self.actor.log_std.exp().mean().item()
 
@@ -248,7 +234,7 @@ class PPOAgent:
 
 
 if __name__ == "__main__":
-    # Tiny smoke test: fake a rollout and confirm one PPO update runs.
+    # small test to verify that PPOAgent can be created and updated without errors
     torch.manual_seed(0)
     np.random.seed(0)
 

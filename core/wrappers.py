@@ -103,7 +103,7 @@ def unwrap_drone_env(env):
 
     Stable-Baselines3 wraps environments in objects such as VecNormalize,
     DummyVecEnv, Monitor, and custom Gym wrappers. This helper walks through
-    those layers so evaluation code can access DroneNavEnv-specific fields
+    those layers so evaluation code can access fields
     such as position, goal, obstacles, and trajectory.
     """
     current = env
